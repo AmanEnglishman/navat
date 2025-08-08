@@ -24,7 +24,11 @@ class CartItemSerializer(serializers.ModelSerializer):
         fields = ('id', 'quantity', 'dish', 'dish_id', 'total_price')
 
     def get_total_price(self, obj):
-        return obj.total_price()
+        # Убедиться, что `obj` это экземпляр модели
+        if isinstance(obj, CartItem):
+            return obj.total_price()
+
+        raise ValueError("Объект должен быть экземпляром модели CartItem")
 
 
 class CartSerializer(serializers.ModelSerializer):

@@ -5,6 +5,7 @@ from .models import CartItem, Cart
 from menu.models import Dish
 from .serializers import CartItemSerializer, CartSerializer
 
+
 class CartView(generics.RetrieveAPIView):
     serializer_class = CartSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -12,6 +13,7 @@ class CartView(generics.RetrieveAPIView):
     def get_object(self):
         cart, created = Cart.objects.get_or_create(user=self.request.user)
         return cart
+
 
 class AddToCartView(generics.CreateAPIView):
     serializer_class = CartItemSerializer
@@ -30,6 +32,9 @@ class AddToCartView(generics.CreateAPIView):
         if not created:
             item.quantity += quantity
             item.save()
+
+        serializer.instance = item
+
 
 class RemoveFromCartView(generics.DestroyAPIView):
     queryset = CartItem.objects.all()
