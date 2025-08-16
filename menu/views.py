@@ -4,7 +4,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from .models import Dish, Review
-from .serializers import DishSerializer, DishDetailSerializer, ReviewForDishSerializer
+from .serializers import DishSerializer, DishDetailSerializer, ReviewForDishSerializer, DishCreateSerializer
 from .filters import DishFilters
 
 
@@ -24,7 +24,7 @@ class DishDetailAPIView(generics.RetrieveAPIView):
 
 class DishCreateAPIView(generics.CreateAPIView):
     queryset = Dish.objects.all()
-    serializer_class = DishSerializer
+    serializer_class = DishCreateSerializer
 
 
 class DishUpdateAPIView(generics.UpdateAPIView):

@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django_filters',
     'drf_spectacular',
     'corsheaders',
+    'rest_framework_simplejwt',
+
     'menu',
     'users',
     'cart'
@@ -137,10 +139,7 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
@@ -171,3 +170,13 @@ CORS_ALLOW_METHODS = (
 CORS_ALLOW_HEADERS = ['Authorization', 'Content-Type', "Accept-Language", ]
 CORS_ALLOW_ALL_ORIGINS = True
 
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # жизнь access-токена
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # жизнь refresh-токена
+    'ROTATE_REFRESH_TOKENS': True,  # обновление refresh при использовании
+    'BLACKLIST_AFTER_ROTATION': True,  # заносить старые refresh в черный список
+    'AUTH_HEADER_TYPES': ('Bearer',),  # Authorization: Bearer <token>
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+}

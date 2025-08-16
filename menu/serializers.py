@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Dish, Review
+from .models import Dish, Review, Category
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -39,3 +39,13 @@ class ReviewForDishSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ('name', 'email', 'comment', 'user')
+
+
+class DishCreateSerializer(serializers.ModelSerializer):
+    # Для записи принимаем только ID категории
+    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
+
+    class Meta:
+        model = Dish
+        fields = ('id', 'name', 'price', 'image', 'category')
+

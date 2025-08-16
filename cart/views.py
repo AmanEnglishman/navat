@@ -2,7 +2,6 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
 from .models import CartItem, Cart
-from menu.models import Dish
 from .serializers import CartItemSerializer, CartSerializer
 
 

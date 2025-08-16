@@ -2,8 +2,9 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate
 from django.core.mail import send_mail
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from navat import settings
 from .serializers import RegisterSerializer, LoginSerializer, ProfileSerializer, FeedbackSerializers
@@ -22,19 +23,17 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = authenticate(
-            username=serializer.validated_data['username'],
-            password=serializer.validated_data['password']
+            username=serializer.data['username'],
+            password=serializer.data['password']
         )
-        if user is not None:
-            login(request, user)
-            return Response({"message": "Успешный вход"}, status=status.HTTP_200_OK)
-        return Response({"error": "Неверные учетные данные"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-class LogoutView(APIView):
-    def post(self, request):
-        logout(request)
-        return Response({"message": "Вы вышли из системы"}, status=status.HTTP_200_OK)
+        if user:
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'message': 'Login Successful'
+            }, status=status.HTTP_200_OK)
+        return Response({'error: Login Failed'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProfileView(generics.RetrieveUpdateAPIView):
